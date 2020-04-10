@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+
+
 
 
 PATH = "VO Practice Sequence/VO Practice Sequence"
@@ -58,19 +61,42 @@ def track_features(current_img, next_img):
     # E = cv2.findEssentialMat(points1=current_key, points2=next_key, focal=1.0, pp=(6.018873000000e+02, 1.831104000000e+02), method=cv2.RANSAC, threshold=2, prob=0.5)
     E = cv2.findEssentialMat(points1=current_key, points2=next_key, cameraMatrix=np.array(mtx), method=cv2.RANSAC, threshold=2, prob=0.5)
     # r1, r2, t = cv2.decomposeEssentialMat(E[0])
-    retval, r, t, mask = cv2.recoverPose(E, current_key, next_key, np.array(mtx))
+    retval, r, t, mask = cv2.recoverPose(E[0], current_key, next_key, cameraMatrix=np.array(mtx))
     return r, t
 
 
 def run():
     scale = 1.0
+    my_T = []
+    C = np.identity(4)
+    # C = np.zeros((4,4))
+    f = open("file.txt", "w")
     for j in range(len(files) - 1):
         img = cv2.imread(os.path.join(PATH, files[j]))
         next_img = cv2.imread(os.path.join(PATH, files[j+1]))
         R, T = track_features(img, next_img)
         temp = np.concatenate((R,T), axis=1)
+        flat = temp.flatten()
+        for i in range(len(flat)):
+            f.write("%s " % str(flat[i]))
+        f.write("\n")
         temp = np.concatenate((temp, np.reshape([0, 0, 0, 1], (1, 4))), axis=0)
-        T_k = np.concatenate(([R, T], [0,1]), axis=1)
+        C = np.matmul(C, temp)
+        my_T.append(C[:, 3])
+    my_T = np.array(my_T)
+    my_T = np.squeeze(my_T)
+    np.save("my_T.npy", my_T)
+    plt.plot(my_T[:,2], my_T[:,0])
+    plt.axes().set_aspect('equal')
+    plt.show()
+
+
+def plot():
+    my_T = np.load('my_T.npy')
+    plt.plot(my_T[:,2], my_T[:,0])
+    plt.axes().set_aspect('equal', 'datalim')
+    plt.show()
 
 
 run()
+# plot()
