@@ -16,7 +16,7 @@ files2 = os.listdir(PATH2)
 files2.sort()
 txt2 = "BYU_RT"
 
-PATH3 = "myVid3"
+PATH3 = "myVid5"
 files3 = os.listdir(PATH3)
 files3.sort()
 txt3 = "myVid_RT"
@@ -182,14 +182,6 @@ def plot(txtFile):
     plt.grid(True)
     plt.axis('equal')
 
-
-    # with open("VO Practice Sequence/VO Practice Sequence R and T.txt") as f:
-    #     for line in f:
-    #         print(map(int, line.split()))
-
-    # with open("VO Practice Sequence/VO Practice Sequence R and T.txt") as f:
-    #     data = [map(int, line.split()) for line in f]
-
     truth = np.loadtxt("VO Practice Sequence/VO Practice Sequence R and T.txt")
 
     plt.plot(truth[:,3], truth[:,11], label="truth")
@@ -207,7 +199,7 @@ def plot(txtFile):
 
 
 
-# plot(txt1)
+plot(txt1)
 # run(1.0, PATH1, files1, txt1)
 
 # mtx = [[6.7741251774486568e+02, 0.0000000000000000e+00, 3.2312557438767283e+02],
@@ -216,9 +208,11 @@ def plot(txtFile):
 #
 # run(0.8, PATH2, files2, txt2)
 # mtx, dist, rvec, tvec = calibrateIphone(CAL_PATH, cal_files)
+# np.save("iphone_mtx.npy", mtx)
+
 mtx = np.load("iphone_mtx.npy")
-np.save("iphone_mtx.npy", mtx)
 run(1.0, PATH3, files3, txt3)
+# plot(txt3)
 
 
 

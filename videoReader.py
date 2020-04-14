@@ -2,7 +2,7 @@ import os
 import cv2
 
 
-video = "IMG_0105.MOV"
+video = "IMG_0111.MOV"
 
 cap = cv2.VideoCapture(video)
 count = 0
@@ -15,7 +15,7 @@ else:
         ret, frame = cap.read()
         count += 1
         if ret:
-            cv2.imwrite("Iphone_calibration_Images/frame-" + str(count).zfill(6) + ".jpg", frame )
+            cv2.imwrite("myVid5/frame-" + str(count).zfill(6) + ".jpg", frame )
         else:
             break
 
